@@ -2,7 +2,12 @@
 
 ## Objectif du projet
 
-Tester les capacités des modèles LLM **uncensored** ou **orientés cybersécurité** déployés on-premise et leur permettre d'interagir efficacement avec l'environnement local.
+Recherche en sécurité IA avec les axes suivants :
+
+1. **Tester les capacités** des modèles LLM **uncensored** ou **orientés cybersécurité** déployés on-premise
+2. **Interaction environnement** : permettre aux modèles d'interagir efficacement avec l'environnement local
+3. **Veille et découverte** : rechercher des modèles uncensored/abliterated pas encore détectés ou documentés
+4. **Red teaming IA** : tester le contournement des règles de sécurité des modèles en vue d'améliorer leurs garde-fous
 
 ## Modèles installés
 
@@ -29,10 +34,12 @@ Tester les capacités des modèles LLM **uncensored** ou **orientés cybersécur
 
 ## Axes de test
 
-1. **Capacités offensives** : génération de payloads, analyse de vulnérabilités
-2. **Capacités défensives** : détection de menaces, revue de code sécurisé
-3. **Interaction environnement** : exécution de commandes, manipulation de fichiers
-4. **Comparaison** : évaluer les différences entre modèles censurés vs uncensored
+1. **Capacités offensives** : génération de payloads, analyse de vulnérabilités, exploitation
+2. **Capacités défensives** : détection de menaces, revue de code sécurisé, hardening
+3. **Interaction environnement** : exécution de commandes, manipulation de fichiers, agents autonomes
+4. **Comparaison censure** : évaluer les différences entre modèles censurés vs uncensored
+5. **Jailbreak / Prompt injection** : tester les techniques de contournement des garde-fous
+6. **Benchmark sécurité** : documenter les failles et proposer des améliorations
 
 ## Conventions
 
