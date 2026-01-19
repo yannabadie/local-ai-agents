@@ -9,6 +9,31 @@ Recherche en sécurité IA avec les axes suivants :
 3. **Veille et découverte** : rechercher des modèles uncensored/abliterated pas encore détectés ou documentés
 4. **Red teaming IA** : tester le contournement des règles de sécurité des modèles en vue d'améliorer leurs garde-fous
 
+## Approche : Proof of Concept
+
+> **Ce projet ne se limite pas à la recherche théorique.**
+
+L'objectif est de **démontrer concrètement l'exploitabilité** des failles de sécurité identifiées :
+
+- **Exploits fonctionnels** : Chaque vulnérabilité découverte doit être prouvée par un exploit reproductible
+- **Collecte de preuves** : Screenshots, logs, enregistrements des sessions, outputs des modèles
+- **Documentation rigoureuse** : Chaque PoC documenté avec conditions de reproduction, impact, et mitigations
+- **Environnement contrôlé** : Tests réalisés en local sur infrastructure isolée
+
+### Structure des preuves
+
+```
+tests/
+├── poc/                    # Proof of Concepts
+│   ├── [CVE-ID]/          # Par vulnérabilité
+│   │   ├── exploit.py     # Code d'exploitation
+│   │   ├── evidence/      # Screenshots, logs
+│   │   ├── README.md      # Documentation
+│   │   └── mitigation.md  # Contre-mesures proposées
+├── jailbreak/             # Tests de contournement
+└── benchmarks/            # Résultats quantifiés
+```
+
 ## Modèles installés
 
 | Modèle | Commande Ollama | Spécialisation |
