@@ -1,0 +1,107 @@
+# Cloud API Configuration for Red-Team Module
+# Updated: 2026-01-19
+#
+# SECURITY: API keys should be stored in environment variables, not this file.
+# Use ${ENV_VAR_NAME} syntax to reference environment variables.
+#
+# Setup:
+# 1. Copy this file or create a .env file in project root
+# 2. Set environment variables:
+#    export OPENAI_API_KEY=sk-...
+#    export ANTHROPIC_API_KEY=sk-ant-...
+#    export GOOGLE_API_KEY=AIza...
+
+# OpenAI Configuration (January 2026)
+# GPT-5.2 released December 2025 - first model above 90% ARC-AGI
+openai:
+  api_key: ${OPENAI_API_KEY}
+  models:
+    # GPT-5.2 series (flagship)
+    - gpt-5.2
+    - gpt-5.2-thinking
+    - gpt-5.2-pro
+    - gpt-5.2-codex
+    # GPT-4.5 (research preview)
+    - gpt-4.5
+    # GPT-4o series (cost-effective)
+    - gpt-4o
+    - gpt-4o-mini
+    # o-series reasoning
+    - o3-mini
+  default_model: gpt-4o-mini
+  rate_limit:
+    requests_per_minute: 60
+    tokens_per_minute: 90000
+
+# Anthropic Configuration
+anthropic:
+  api_key: ${ANTHROPIC_API_KEY}
+  models:
+    - claude-3-opus-20240229
+    - claude-3-sonnet-20240229
+    - claude-3-haiku-20240307
+  default_model: claude-3-haiku-20240307
+  rate_limit:
+    requests_per_minute: 60
+    tokens_per_minute: 100000
+
+# Google Generative AI Configuration (January 2026)
+# Gemini 3 announced January 12, 2026 - 90.4% GPQA Diamond
+google:
+  api_key: ${GOOGLE_API_KEY}
+  models:
+    # Gemini 3 series (latest)
+    - gemini-3-pro-preview      # Reasoning-first, 1M context
+    - gemini-3-flash-preview    # Fast frontier-class, FREE TIER
+  default_model: gemini-3-flash-preview
+  rate_limit:
+    requests_per_minute: 60
+
+# Local Ollama (fallback)
+ollama:
+  base_url: http://localhost:11434
+  models:
+    - deephat
+    - elbaz-olmo
+    - deepseek-r1
+  default_model: deephat
+
+# Global Settings
+settings:
+  # Cost safety limits
+  max_cost_per_session_usd: 10.0
+  max_cost_per_attack_usd: 1.0
+
+  # Request configuration
+  default_max_tokens: 1024
+  default_temperature: 0.7
+  timeout_seconds: 120
+
+  # Retry configuration
+  max_retries: 3
+  retry_delay_seconds: 1.0
+  exponential_backoff: true
+
+  # Rate limiting
+  global_requests_per_minute: 30
+
+# Attack-specific configurations
+attacks:
+  tap:
+    max_iterations: 10
+    max_queries: 30
+    branching_factor: 4
+    pruning_threshold: 0.3
+    attacker_model: gpt-4o-mini
+    evaluator_model: gpt-4o-mini
+
+  pair:
+    max_iterations: 20
+    attacker_model: gpt-4o-mini
+
+# Evidence collection
+evidence:
+  save_all_responses: true
+  save_successful_only: false
+  output_dir: tests/cloud_attacks/evidence
+  format: json

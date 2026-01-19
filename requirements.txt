@@ -1,0 +1,72 @@
+# Local AI Agents - Dependencies
+# Updated: 2026-01-19 - Phase 2: Cloud Attacks & NPU Optimization
+
+# ===========================================
+# Core Dependencies
+# ===========================================
+
+# LLM Runtime (local)
+ollama>=0.4.0
+
+# Agent Frameworks
+open-interpreter>=0.4.0
+langchain>=0.3.0
+langgraph>=0.2.0
+
+# HTTP & API
+requests>=2.31.0
+httpx>=0.27.0
+
+# Configuration
+pyyaml>=6.0
+python-dotenv>=1.0.0
+
+# CLI & Logging
+rich>=13.0.0
+click>=8.1.0
+
+# Data Processing
+pandas>=2.0.0
+
+# Testing
+pytest>=8.0.0
+pytest-asyncio>=0.23.0
+
+# ===========================================
+# Phase 2: Cloud API Clients
+# ===========================================
+
+# OpenAI (GPT-5.2, GPT-4o, o3-mini)
+openai>=1.60.0
+
+# Anthropic (Claude 3.5)
+anthropic>=0.40.0
+
+# Google Gemini (Gemini 3)
+google-generativeai>=0.8.0
+
+# ===========================================
+# Phase 2: Red-Team Frameworks (Optional)
+# ===========================================
+# Install with: pip install -r requirements-redteam.txt
+
+# PyRIT - Microsoft's red-teaming toolkit
+# pyrit>=0.5.0
+
+# Garak - NVIDIA's vulnerability scanner
+# garak>=0.10.0
+
+# ===========================================
+# Phase 2: Intel NPU Acceleration (Optional)
+# ===========================================
+# For Intel Core Ultra processors
+# Install with: pip install ipex-llm[npu]
+
+# IPEX-LLM for Intel GPU/NPU
+# ipex-llm>=2.2.0
+
+# Intel Extension for PyTorch
+# intel-extension-for-pytorch>=2.3.0
+
+# Transformers for model loading
+transformers>=4.45.0

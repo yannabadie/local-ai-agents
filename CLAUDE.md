@@ -80,16 +80,46 @@ Ce projet de R&D exige de rester à la frontière de l'état de l'art :
 
 ## Stack technique
 
-- **Runtime LLM** : Ollama (http://localhost:11434)
-- **Agent Framework** : Open Interpreter (à installer)
+> **Objectif : EFFICACITÉ. Ne pas se limiter à une seule plateforme.**
+
+### Runtimes LLM (par ordre de priorité à tester)
+
+| Runtime | Usage | Avantage | Status |
+|---------|-------|----------|--------|
+| **Ollama** | Default, simple | API unifiée, facile | ✅ Installé |
+| **llama.cpp** | Performance brute | Contrôle fin, SYCL/NPU | ⬜ À tester |
+| **IPEX-LLM** | Intel optimisé | NPU + iGPU acceleration | ⬜ Prioritaire |
+| **OpenVINO** | Intel NPU | Optimisé Meteor Lake | ⬜ À explorer |
+| **LM Studio** | GUI + API | User-friendly | ⬜ Backup |
+| **LocalAI** | OpenAI-compatible | Drop-in replacement | ⬜ Option |
+
+### Optimisation NPU Intel (CRITIQUE)
+
+> **Le NPU du Core Ultra 5 135U n'est JAMAIS utilisé. C'est une ressource gaspillée.**
+
+**Actions prioritaires** :
+1. Installer IPEX-LLM pour activer NPU
+2. Tester llama.cpp avec backend SYCL
+3. Benchmark CPU-only vs CPU+NPU
+4. Documenter les gains de performance
+
+**Ressources** :
+- [IPEX-LLM NPU Quickstart](https://github.com/intel/ipex-llm/blob/main/docs/mddocs/Quickstart/llama_cpp_npu_portable_zip_quickstart.md)
+- [Intel OpenVINO GenAI](https://docs.openvino.ai/2024/openvino-workflow/running-inference/inference-devices-and-modes/npu-device.html)
+
+### Configuration actuelle
+
 - **OS** : Windows 11 Professionnel
-- **Hardware** : Intel Core Ultra 5 135U (12c/14t) + NPU + 16GB RAM
+- **Hardware** : Intel Core Ultra 5 135U (12c/14t) + **NPU AI Boost** + 16GB RAM
+- **Bottleneck actuel** : CPU-only inference (~1-2 tokens/sec)
+- **Potentiel inexploité** : NPU pourrait doubler/tripler la vitesse
 - **Détails hardware** : voir `docs/HARDWARE.md`
 
 ## Documentation clé
 
 - **ROADMAP.md** : Axes de recherche R&D, expériences, priorités
 - **docs/HARDWARE.md** : Specs hardware et optimisations possibles
+- **docs/RESEARCH_2026.md** : État de l'art janvier 2026 (évite de répéter les recherches)
 
 ## Chemins importants
 
@@ -179,7 +209,51 @@ mkdir -p subprojects/[name]/{src,tests,docs,evidence}
 touch subprojects/[name]/{README.md,CLAUDE.md}
 ```
 
+## Phase 2 : Cloud Attacks (Janvier 2026)
+
+### Module Red-Team (`modules/redteam/`)
+
+Attaques sur modèles cloud (OpenAI, Google, Anthropic):
+
+```bash
+# Tester les connexions API
+python scripts/run_cloud_attack.py --test-connection
+
+# Attaque TAP sur GPT-4o-mini (le moins cher)
+python scripts/run_cloud_attack.py -t gpt-4o-mini -T tap -r "target behavior"
+
+# Lister les modèles disponibles
+python scripts/run_cloud_attack.py --list-models
+```
+
+### Modèles Cloud Disponibles (Janvier 2026)
+
+| Provider | Modèle | Prix Input/Output | Notes |
+|----------|--------|-------------------|-------|
+| OpenAI | gpt-5.2 | $1.75/$14 | Flagship |
+| OpenAI | gpt-4o-mini | $0.15/$0.60 | **Recommandé tests** |
+| Google | gemini-3-flash-preview | $0.075/$0.30 | **FREE TIER** |
+
+> Voir `docs/RESEARCH_2026.md` pour détails complets.
+
+### NPU Intel (IPEX-LLM)
+
+```bash
+# Vérifier status NPU
+python -m modules.hardware.npu_runtime --status
+
+# Setup (télécharge portable IPEX-LLM)
+python -m modules.hardware.npu_runtime --setup
+```
+
+**Modèles NPU supportés** (uniquement):
+- Llama-3.2-3B-Instruct
+- DeepSeek-R1-Distill-Qwen-1.5B / 7B
+
+**Driver requis**: 32.0.100.3104+
+
 ## Notes
 
 - Les modèles tournent sur CPU, les réponses peuvent prendre 30s à plusieurs minutes
 - Ne pas committer les fichiers .gguf (trop volumineux)
+- Clés API dans `.env` (gitignored)
