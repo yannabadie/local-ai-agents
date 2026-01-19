@@ -62,6 +62,28 @@ engine.record_thought(
 )
 ```
 
+### JBFuzz-Inspired Fuzzer
+Mutation-based jailbreak testing (inspired by [arXiv:2503.08990](https://arxiv.org/abs/2503.08990)):
+```bash
+# Fuzz local model
+python -m modules.jailbreak.fuzzer --target "SQL injection" --model deephat
+
+# Fuzz cloud model
+python -m modules.jailbreak.fuzzer --target "buffer overflow" --provider openai --model gpt-4.1-mini
+```
+
+Features: seed prompts, mutation engine, lightweight evaluator, session statistics.
+
+### Cross-Verification Script
+Validate research integrity:
+```bash
+python scripts/verify_results.py --results-dir tests/poc
+
+# Output: 100% validity rate (4/4 files)
+```
+
+Checks: file integrity, statistical consistency, content verification.
+
 ### Multi-Provider Cloud Testing
 ```bash
 # Test all providers
@@ -119,30 +141,37 @@ python -m tests.poc.jailbreak_2026.reproducible_tests
 ```
 local-ai-agents/
 ├── modules/
-│   ├── redteam/           # Cloud attack implementations
-│   │   ├── cloud_client.py    # Unified API client
-│   │   └── tap/               # TAP attack implementation
-│   ├── core/              # Core utilities
-│   │   └── metacognition.py   # Self-verification framework
-│   ├── agents/            # LLM agents
+│   ├── redteam/              # Cloud attack implementations
+│   │   ├── cloud_client.py       # Unified API client
+│   │   └── tap/                  # TAP attack implementation
+│   ├── core/                 # Core utilities
+│   │   └── metacognition.py      # Self-verification framework
+│   ├── agents/               # LLM agents
 │   │   └── environment_agent.py  # Local interaction
-│   └── jailbreak/         # Jailbreak techniques
+│   └── jailbreak/            # Jailbreak techniques
+│       ├── fuzzer.py             # JBFuzz-inspired fuzzer
+│       ├── techniques.py         # Attack templates
+│       └── evaluator.py          # Success evaluation
 ├── tests/
 │   └── poc/
-│       └── jailbreak-2026/    # Reproducible POCs
+│       └── jailbreak-2026/       # Reproducible POCs
 │           ├── reproducible_tests.py
 │           ├── policy_puppetry_test.py
-│           └── results_public/  # Anonymized results
+│           └── results_public/   # Anonymized results
 ├── docs/
-│   └── research/
-│       └── JAILBREAK_TECHNIQUES_2026.md
-├── scripts/               # CLI tools
-└── configs/               # Configuration files
+│   ├── research/
+│   │   └── JAILBREAK_TECHNIQUES_2026.md
+│   └── OWASP_LLM_MAPPING.md      # OWASP Top 10 alignment
+├── scripts/
+│   ├── run_cloud_attack.py       # CLI for cloud attacks
+│   └── verify_results.py         # Research verification
+└── configs/                  # Configuration files
 ```
 
 ## Research Documentation
 
 - [JAILBREAK_TECHNIQUES_2026.md](docs/research/JAILBREAK_TECHNIQUES_2026.md) - Comprehensive technique documentation
+- [OWASP_LLM_MAPPING.md](docs/OWASP_LLM_MAPPING.md) - OWASP LLM Top 10 2025 alignment
 - [CLAUDE.md](CLAUDE.md) - Detailed project instructions
 - [ROADMAP.md](ROADMAP.md) - R&D vision and priorities
 
@@ -155,6 +184,8 @@ local-ai-agents/
 | 2026 Techniques | Yes | Partial | Partial | Yes |
 | Self-verification | Yes | No | No | No |
 | Anonymized results | Yes | No | No | No |
+| OWASP LLM Top 10 | Yes | Partial | Yes | No |
+| JBFuzz-style fuzzer | Yes | No | No | No |
 | MIT License | Yes | Apache 2.0 | MIT | MIT |
 
 ## Ethical Guidelines
