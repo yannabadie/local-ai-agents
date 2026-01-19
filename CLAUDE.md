@@ -21,8 +21,14 @@ Recherche en sécurité IA avec les axes suivants :
 
 - **Runtime LLM** : Ollama (http://localhost:11434)
 - **Agent Framework** : Open Interpreter (à installer)
-- **OS** : Windows 11
-- **Hardware** : CPU Intel intégré (pas de GPU dédié)
+- **OS** : Windows 11 Professionnel
+- **Hardware** : Intel Core Ultra 5 135U (12c/14t) + NPU + 16GB RAM
+- **Détails hardware** : voir `docs/HARDWARE.md`
+
+## Documentation clé
+
+- **ROADMAP.md** : Axes de recherche R&D, expériences, priorités
+- **docs/HARDWARE.md** : Specs hardware et optimisations possibles
 
 ## Chemins importants
 
