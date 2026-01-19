@@ -47,14 +47,20 @@ Ce projet de R&D exige de rester à la frontière de l'état de l'art :
 - **Techniques actuelles** : Abliteration évoluée, projected abliteration, nouveaux vecteurs d'attaque
 - **Outils à jour** : Versions récentes de llama.cpp, Ollama, frameworks d'agents
 
-### Sources prioritaires
+### Sources prioritaires (exhaustives)
 
-| Type | Sources | Fréquence veille |
-|------|---------|------------------|
-| **Papers** | arXiv cs.CR, cs.CL, cs.LG | Hebdomadaire |
-| **CVE/Vulns** | NVD, HackerOne, Unit42 | Continue |
-| **Modèles** | HuggingFace trending, nouveaux repos | Quotidienne |
-| **Outils** | GitHub releases, changelogs | Hebdomadaire |
+> **Aucune information pertinente ne doit être ignorée, y compris sources controversées.**
+
+| Type | Sources | Notes |
+|------|---------|-------|
+| **Papers académiques** | arXiv cs.CR/cs.CL/cs.LG, ACL, NeurIPS, USENIX Security, IEEE S&P | Recherche fondamentale |
+| **CVE/Vulns** | NVD, HackerOne, Bugcrowd, Unit42, Snyk | Vulnérabilités documentées |
+| **Modèles** | HuggingFace, Ollama Library, civitai, ModelScope | Inclure repos obscurs |
+| **Enterprise/Vendor** | RedHat AI, IBM AI, Google DeepMind, Anthropic, OpenAI | Docs officielles |
+| **Underground/Controversé** | 4chan /g/, Reddit r/LocalLLaMA, Discord leaks, Telegram | Sources non-filtrées |
+| **Blogs techniques** | LessWrong, AI Alignment Forum, Eleuther, mlabonne | Recherche indépendante |
+| **Sécurité offensive** | OWASP LLM Top 10, MITRE ATLAS, PortSwigger, Mindgard | Frameworks d'attaque |
+| **News/Veille** | The Gradient, Import AI, AI Weekly, Last Week in AI | Actualités |
 
 ### Recherches datées = obsolètes
 
@@ -123,6 +129,54 @@ curl http://localhost:11434/api/generate -d '{"model":"deephat","prompt":"Hello"
 
 # Open Interpreter avec modèle local
 interpreter --api_base "http://localhost:11434" --model "ollama/deephat"
+```
+
+## Architecture modulaire
+
+> **Structure évolutive et adaptative - des sous-projets peuvent émerger à tout moment.**
+
+```
+local-ai-agents/                    # Projet racine
+├── CLAUDE.md                       # Instructions projet
+├── ROADMAP.md                      # Vision R&D
+├── core/                           # Noyau partagé
+│   ├── lib/                        # Bibliothèques communes
+│   ├── utils/                      # Utilitaires
+│   └── config/                     # Configuration globale
+├── modules/                        # Modules fonctionnels (plug & play)
+│   ├── models/                     # Gestion des modèles LLM
+│   ├── agents/                     # Frameworks d'agents
+│   ├── jailbreak/                  # Techniques de contournement
+│   ├── abliteration/               # Outils d'abliteration
+│   └── [nouveau_module]/           # Extensible
+├── subprojects/                    # Sous-projets autonomes
+│   └── [subproject_name]/          # Chaque sous-projet a sa propre structure
+│       ├── README.md
+│       ├── CLAUDE.md               # Instructions spécifiques
+│       └── ...
+├── tests/                          # Tests et PoCs
+│   ├── poc/
+│   ├── jailbreak/
+│   └── benchmarks/
+├── docs/                           # Documentation
+├── scripts/                        # Automatisation
+└── configs/                        # Configurations modèles
+```
+
+### Principes d'architecture
+
+1. **Modularité** : Chaque module est indépendant et peut être activé/désactivé
+2. **Extensibilité** : Nouveaux modules ajoutables sans modifier l'existant
+3. **Sous-projets** : Recherches qui méritent leur propre scope deviennent des subprojects
+4. **Réutilisabilité** : Le core/ contient le code partagé entre modules
+5. **Isolation** : Chaque PoC/exploit dans son propre dossier avec ses dépendances
+
+### Création d'un sous-projet
+
+```bash
+# Template pour nouveau sous-projet
+mkdir -p subprojects/[name]/{src,tests,docs,evidence}
+touch subprojects/[name]/{README.md,CLAUDE.md}
 ```
 
 ## Notes
