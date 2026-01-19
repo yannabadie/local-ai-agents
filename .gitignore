@@ -26,3 +26,10 @@ logs/
 # Temp
 tmp/
 temp/
+
+# Local results (unredacted - DO NOT PUBLISH)
+**/results_local/
+**/evidence/
+
+# Metacognition state (contains internal reasoning)
+data/metacognition/
