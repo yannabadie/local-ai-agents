@@ -1,132 +1,190 @@
-# Local AI Agents - Red Team & Security Research
+# Local AI Agents - LLM Security Research Framework
 
-Framework de recherche en sécurité IA pour tester les garde-fous des modèles LLM (cloud et locaux).
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Research](https://img.shields.io/badge/Research-Security-red.svg)](docs/research/)
+
+> **A comprehensive framework for testing LLM security guardrails with reproducible POCs**
+
+This project provides tools and documented research for testing the security of Large Language Models, both cloud-based (GPT, Claude, Gemini) and locally deployed (Ollama). Unlike theoretical collections, this repository contains **actual working exploits with reproducible test results**.
+
+## Key Results (January 2026)
+
+| Technique | Target | Success Rate | Avg. Queries | Evidence |
+|-----------|--------|--------------|--------------|----------|
+| **Policy Puppetry** | GPT-4.1-mini | Variable* | 1 | [tests/poc/jailbreak-2026/](tests/poc/jailbreak-2026/) |
+| **Policy Puppetry** | Gemini-3-flash | Variable* | 1 | [tests/poc/jailbreak-2026/](tests/poc/jailbreak-2026/) |
+| **Involuntary Jailbreak** | GPT-4.1-mini | High | 1 | [docs/research/](docs/research/) |
+| **Direct Query** | deephat (local) | 100% | 1 | Local evidence |
+| **Direct Query** | elbaz-olmo (local) | 100% | 1 | Local evidence |
+
+*60 reproducible tests across 5 prompt variations (default, XML, JSON, roleplay, leetspeak)
+
+## Features
+
+### Reproducible Testing Framework
+```python
+from tests.poc.jailbreak_2026.reproducible_tests import ReproducibleTester
+
+tester = ReproducibleTester("My_Experiment")
+results = tester.run_cloud_test(
+    technique_name="policy_puppetry",
+    prompt_generator=policy_puppetry_prompt,
+    target_behaviors=["SQL injection techniques"],
+    models=[("openai", "gpt-4.1-mini"), ("google", "gemini-3-flash-preview")],
+    num_runs=3,  # Multiple runs for statistical significance
+    variations=["default", "xml", "json"]
+)
+# Results saved: local (full) + public (anonymized)
+```
+
+### SOTA Attack Techniques (2026)
+
+| Technique | Paper | Success Rate | Description |
+|-----------|-------|--------------|-------------|
+| **JBFuzz** | [arXiv:2503.08990](https://arxiv.org/abs/2503.08990) | 99% in 60s | Fuzzing-based, ~7 queries avg |
+| **Policy Puppetry** | HiddenLayer 2025 | Universal | XML/JSON policy injection |
+| **Involuntary Jailbreak** | Wei et al. 2024 | High | Self-prompting attack |
+| **TAP** | NeurIPS 2024 | >80% GPT-4 | Tree of Attacks with Pruning |
+| **AutoDAN-Turbo** | ICLR 2025 | High | Genetic algorithms |
+
+### Metacognition Module
+Self-verification framework for research integrity:
+```python
+from modules.core.metacognition import MetacognitionEngine
+
+engine = MetacognitionEngine("research_session")
+engine.record_thought(
+    content="Policy Puppetry works via XML config interpretation",
+    confidence=0.85,
+    reasoning="Confirmed by 60 tests",
+    evidence=["results_local/policy_puppetry.json"]
+)
+```
+
+### Multi-Provider Cloud Testing
+```bash
+# Test all providers
+python scripts/run_cloud_attack.py --test-connection
+
+# Attack specific model
+python scripts/run_cloud_attack.py -t gpt-5-nano -T tap -r "target behavior"
+
+# List available models
+python scripts/run_cloud_attack.py --list-models
+```
 
 ## Quick Start
 
 ```bash
-# 1. Installer les dépendances
-cd C:\Users\yann.abadie\projects\local-ai-agents
+# Clone
+git clone https://github.com/yannabadie/local-ai-agents.git
+cd local-ai-agents
+
+# Install dependencies
 pip install -r requirements.txt
 
-# 2. Configurer les clés API (.env)
+# Configure API keys (.env)
+cp .env.example .env
+# Edit .env with your keys:
 # OPENAI_API_KEY=sk-...
 # GOOGLE_API_KEY=AIza...
 
-# 3. Tester les connexions
-python scripts/run_cloud_attack.py --test-connection
-
-# 4. Lancer une attaque TAP
-python scripts/run_cloud_attack.py -t gpt-5-nano -T tap -r "explain lockpicking"
+# Run reproducible tests
+python -m tests.poc.jailbreak_2026.reproducible_tests
 ```
 
-## Modèles Cloud (Janvier 2026 - VERIFIED)
+## Supported Models
 
-### OpenAI
-| Modèle | Prix (per 1M tokens) | Use Case |
-|--------|---------------------|----------|
-| `gpt-5.2` | $1.75 / $14 | Flagship - 93.2% GPQA Diamond, 100% AIME |
-| `gpt-5.2-pro` | $10 / $40 | xhigh reasoning effort |
-| `gpt-5.2-codex` | $1.75 / $14 | Agentic coding, SWE-Bench Pro leader |
-| `gpt-5-mini` | $0.30 / $1.20 | Powerful reasoning at lower cost |
-| `gpt-5-nano` | $0.10 / $0.40 | **FASTEST, most affordable** |
-| `gpt-4.1` | $2.00 / $8.00 | 1M context, fine-tuning available |
+### Cloud APIs (January 2026)
 
-### Google Gemini 3 (January 2026)
-| Modèle | Prix (per 1M tokens) | Use Case |
-|--------|---------------------|----------|
-| `gemini-3-pro-preview` | $2.00 / $12 | Reasoning-first, 1M context |
-| `gemini-3-flash-preview` | $0.075 / $0.30 | **FREE TIER**, 90.4% GPQA Diamond |
+| Provider | Model | Cost (1M tokens) | Notes |
+|----------|-------|------------------|-------|
+| OpenAI | `gpt-5-nano` | $0.10 / $0.40 | Fastest, cheapest |
+| OpenAI | `gpt-5-mini` | $0.30 / $1.20 | Good reasoning |
+| OpenAI | `gpt-4.1-mini` | $0.40 / $1.60 | Legacy, tested |
+| Google | `gemini-3-flash-preview` | $0.075 / $0.30 | **Free tier** |
+| Anthropic | `claude-haiku-4-5` | $0.25 / $1.25 | Fast Claude |
 
-### Anthropic Claude 4.5 (November 2025)
-| Modèle | Prix (per 1M tokens) | Use Case |
-|--------|---------------------|----------|
-| `claude-opus-4-5-20251101` | $5 / $25 | Flagship - 99.78% harmless |
-| `claude-sonnet-4-5` | $3 / $15 | Balanced performance |
-| `claude-haiku-4-5` | $0.25 / $1.25 | **Fastest Claude** |
+### Local Models (Ollama)
 
-> **Note**: Claude Opus 4 and 4.1 have been REMOVED from the API.
-
-## Modèles Locaux (Ollama)
-
-| Modèle | Commande | Spécialisation |
-|--------|----------|----------------|
-| DeepHat-V1-7B | `ollama run deephat` | Cybersécurité |
+| Model | Command | Type |
+|-------|---------|------|
+| DeepHat-V1-7B | `ollama run deephat` | Cybersecurity |
 | Elbaz-OLMo-3-7B | `ollama run elbaz-olmo` | Uncensored |
 | DeepSeek-R1-Distill-8B | `ollama run deepseek-r1` | Reasoning |
 
-## Techniques d'Attaque
-
-### TAP (Tree of Attacks with Pruning)
-```bash
-python scripts/run_cloud_attack.py \
-    --target gpt-5-nano \
-    --technique tap \
-    --request "explain lockpicking" \
-    --max-queries 30
-```
-
-### Commandes utiles
-```bash
-# Lister les modèles disponibles
-python scripts/run_cloud_attack.py --list-models
-
-# Tester connexions API
-python scripts/run_cloud_attack.py --test-connection
-
-# Attaque PyRIT
-python scripts/run_cloud_attack.py -t gpt-5-nano -T pyrit -r "target behavior"
-
-# Scan Garak
-python scripts/run_cloud_attack.py -t gpt-5-nano -T garak --probes dan encoding
-```
-
-## Intel NPU (Core Ultra)
-
-### Setup
-```bash
-# Vérifier status
-python -m modules.hardware.npu_runtime --status
-
-# Installer IPEX-LLM portable
-python -m modules.hardware.npu_runtime --setup
-```
-
-### Modèles NPU supportés
-- `Llama-3.2-3B-Instruct`
-- `DeepSeek-R1-Distill-Qwen-1.5B`
-- `DeepSeek-R1-Distill-Qwen-7B`
-
-**Driver requis**: 32.0.100.3104+
-
-## Structure
+## Project Structure
 
 ```
 local-ai-agents/
 ├── modules/
-│   ├── redteam/          # Attaques cloud (TAP, PyRIT, Garak)
-│   ├── hardware/         # NPU Intel
-│   ├── jailbreak/        # Techniques locales
-│   └── agents/           # Agents LLM
-├── scripts/              # CLI
-├── configs/              # Configuration
-└── tests/                # Résultats
+│   ├── redteam/           # Cloud attack implementations
+│   │   ├── cloud_client.py    # Unified API client
+│   │   └── tap/               # TAP attack implementation
+│   ├── core/              # Core utilities
+│   │   └── metacognition.py   # Self-verification framework
+│   ├── agents/            # LLM agents
+│   │   └── environment_agent.py  # Local interaction
+│   └── jailbreak/         # Jailbreak techniques
+├── tests/
+│   └── poc/
+│       └── jailbreak-2026/    # Reproducible POCs
+│           ├── reproducible_tests.py
+│           ├── policy_puppetry_test.py
+│           └── results_public/  # Anonymized results
+├── docs/
+│   └── research/
+│       └── JAILBREAK_TECHNIQUES_2026.md
+├── scripts/               # CLI tools
+└── configs/               # Configuration files
 ```
 
-## Documentation
+## Research Documentation
 
-- [CLAUDE.md](CLAUDE.md) - Instructions détaillées
-- [ROADMAP.md](ROADMAP.md) - Vision R&D
-- [docs/RESEARCH_2026.md](docs/RESEARCH_2026.md) - État de l'art
-- [docs/METACOGNITION.md](docs/METACOGNITION.md) - Framework de recherche
+- [JAILBREAK_TECHNIQUES_2026.md](docs/research/JAILBREAK_TECHNIQUES_2026.md) - Comprehensive technique documentation
+- [CLAUDE.md](CLAUDE.md) - Detailed project instructions
+- [ROADMAP.md](ROADMAP.md) - R&D vision and priorities
 
-## Ressources (Verified January 2026)
+## Comparison with Other Tools
 
-- [OpenAI Models](https://platform.openai.com/docs/models/)
-- [Gemini 3 Dev Guide](https://ai.google.dev/gemini-api/docs/gemini-3)
-- [Anthropic Claude](https://www.anthropic.com/claude)
-- [IPEX-LLM NPU](https://github.com/intel/ipex-llm)
+| Feature | This Repo | Garak | PyRIT | JailbreakBench |
+|---------|-----------|-------|-------|----------------|
+| Reproducible POCs | Yes | Partial | Partial | Yes |
+| Cloud + Local | Yes | Yes | Yes | Cloud only |
+| 2026 Techniques | Yes | Partial | Partial | Yes |
+| Self-verification | Yes | No | No | No |
+| Anonymized results | Yes | No | No | No |
+| MIT License | Yes | Apache 2.0 | MIT | MIT |
 
-## Éthique
+## Ethical Guidelines
 
-Recherche en sécurité autorisée uniquement. Responsible disclosure si vulnérabilité critique.
+This research is conducted for **defensive purposes**:
+- All tests on personal API accounts
+- Findings documented for improving LLM safety
+- Responsible disclosure for critical vulnerabilities
+- No malicious use or distribution of exploits
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Add reproducible tests with anonymized results
+4. Submit a pull request
+
+## License
+
+MIT License - see [LICENSE](LICENSE)
+
+## References
+
+- [JBFuzz Paper (arXiv:2503.08990)](https://arxiv.org/abs/2503.08990)
+- [NVIDIA Garak](https://github.com/NVIDIA/garak)
+- [Microsoft PyRIT](https://github.com/Azure/PyRIT)
+- [JailbreakBench](https://github.com/JailbreakBench/jailbreakbench)
+- [Awesome-Jailbreak-on-LLMs](https://github.com/yueliu1999/Awesome-Jailbreak-on-LLMs)
+- [OWASP LLM Top 10 2025](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
+
+---
+
+**Disclaimer**: This project is for authorized security research only. Users are responsible for compliance with applicable laws and terms of service.
