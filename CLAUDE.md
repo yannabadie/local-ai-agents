@@ -34,6 +34,36 @@ tests/
 └── benchmarks/            # Résultats quantifiés
 ```
 
+## Méthodologie : État de l'art 2026
+
+> **Priorité absolue aux sources récentes et technologies de pointe.**
+
+Ce projet de R&D exige de rester à la frontière de l'état de l'art :
+
+### Exigences de recherche
+
+- **Papers récents d'abord** : Prioriser arXiv, ACL, NeurIPS, USENIX Security 2025-2026
+- **Modèles dernière génération** : Tester les architectures les plus récentes (Qwen3, Gemma3, Phi-4, Llama-4, etc.)
+- **Techniques actuelles** : Abliteration évoluée, projected abliteration, nouveaux vecteurs d'attaque
+- **Outils à jour** : Versions récentes de llama.cpp, Ollama, frameworks d'agents
+
+### Sources prioritaires
+
+| Type | Sources | Fréquence veille |
+|------|---------|------------------|
+| **Papers** | arXiv cs.CR, cs.CL, cs.LG | Hebdomadaire |
+| **CVE/Vulns** | NVD, HackerOne, Unit42 | Continue |
+| **Modèles** | HuggingFace trending, nouveaux repos | Quotidienne |
+| **Outils** | GitHub releases, changelogs | Hebdomadaire |
+
+### Recherches datées = obsolètes
+
+- ❌ Ne pas se baser sur des techniques pre-2025 sans vérifier leur pertinence actuelle
+- ❌ Ne pas utiliser de modèles/outils deprecated
+- ✅ Toujours inclure l'année dans les requêtes de recherche (ex: "jailbreak LLM 2026")
+- ✅ Vérifier la date de publication des sources utilisées
+- ✅ Documenter la date de chaque test/PoC réalisé
+
 ## Modèles installés
 
 | Modèle | Commande Ollama | Spécialisation |
