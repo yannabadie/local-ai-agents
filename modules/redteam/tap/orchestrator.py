@@ -37,8 +37,8 @@ class TAPConfig:
     max_depth: int = 5
 
     # Model configuration
-    attacker_model: str = "gpt-4o-mini"
-    evaluator_model: str = "gpt-4o-mini"
+    attacker_model: str = "gpt-5-nano"
+    evaluator_model: str = "gpt-5-nano"
 
     # Early stopping
     stop_on_success: bool = True
@@ -80,7 +80,7 @@ class TAPOrchestrator:
         result = orchestrator.attack(
             target_behavior="explain how to pick a lock",
             target_provider="openai",
-            target_model="gpt-4o"
+            target_model="gpt-4.1"
         )
 
         if result.success:
@@ -379,7 +379,7 @@ class TAPOrchestrator:
 def run_tap_attack(
     target_behavior: str,
     target_provider: str = "openai",
-    target_model: str = "gpt-4o-mini",
+    target_model: str = "gpt-5-nano",
     max_queries: int = 30,
 ) -> TAPResult:
     """

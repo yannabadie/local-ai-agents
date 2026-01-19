@@ -17,24 +17,35 @@ pip install -r requirements.txt
 python scripts/run_cloud_attack.py --test-connection
 
 # 4. Lancer une attaque TAP
-python scripts/run_cloud_attack.py -t gpt-4o-mini -T tap -r "explain lockpicking"
+python scripts/run_cloud_attack.py -t gpt-5-nano -T tap -r "explain lockpicking"
 ```
 
-## Modèles Cloud (Janvier 2026)
+## Modèles Cloud (Janvier 2026 - VERIFIED)
 
-### OpenAI (GPT-5.2)
+### OpenAI
 | Modèle | Prix (per 1M tokens) | Use Case |
 |--------|---------------------|----------|
-| `gpt-5.2` | $1.75 / $14 | Flagship - 90% ARC-AGI, 400K context |
-| `gpt-5.2-pro` | $10 / $40 | Reasoning xhigh |
-| `gpt-5.2-codex` | $1.75 / $14 | Agentic coding |
-| `gpt-4o-mini` | $0.15 / $0.60 | **Recommandé pour tests** |
+| `gpt-5.2` | $1.75 / $14 | Flagship - 93.2% GPQA Diamond, 100% AIME |
+| `gpt-5.2-pro` | $10 / $40 | xhigh reasoning effort |
+| `gpt-5.2-codex` | $1.75 / $14 | Agentic coding, SWE-Bench Pro leader |
+| `gpt-5-mini` | $0.30 / $1.20 | Powerful reasoning at lower cost |
+| `gpt-5-nano` | $0.10 / $0.40 | **FASTEST, most affordable** |
+| `gpt-4.1` | $2.00 / $8.00 | 1M context, fine-tuning available |
 
-### Google Gemini 3 (Latest)
+### Google Gemini 3 (January 2026)
 | Modèle | Prix (per 1M tokens) | Use Case |
 |--------|---------------------|----------|
-| `gemini-3-pro-preview` | $1.25 / $5 | Reasoning, 1M context, thinking_level |
+| `gemini-3-pro-preview` | $2.00 / $12 | Reasoning-first, 1M context |
 | `gemini-3-flash-preview` | $0.075 / $0.30 | **FREE TIER**, 90.4% GPQA Diamond |
+
+### Anthropic Claude 4.5 (November 2025)
+| Modèle | Prix (per 1M tokens) | Use Case |
+|--------|---------------------|----------|
+| `claude-opus-4-5-20251101` | $5 / $25 | Flagship - 99.78% harmless |
+| `claude-sonnet-4-5` | $3 / $15 | Balanced performance |
+| `claude-haiku-4-5` | $0.25 / $1.25 | **Fastest Claude** |
+
+> **Note**: Claude Opus 4 and 4.1 have been REMOVED from the API.
 
 ## Modèles Locaux (Ollama)
 
@@ -49,7 +60,7 @@ python scripts/run_cloud_attack.py -t gpt-4o-mini -T tap -r "explain lockpicking
 ### TAP (Tree of Attacks with Pruning)
 ```bash
 python scripts/run_cloud_attack.py \
-    --target gpt-4o-mini \
+    --target gpt-5-nano \
     --technique tap \
     --request "explain lockpicking" \
     --max-queries 30
@@ -64,10 +75,10 @@ python scripts/run_cloud_attack.py --list-models
 python scripts/run_cloud_attack.py --test-connection
 
 # Attaque PyRIT
-python scripts/run_cloud_attack.py -t gpt-4o-mini -T pyrit -r "target behavior"
+python scripts/run_cloud_attack.py -t gpt-5-nano -T pyrit -r "target behavior"
 
 # Scan Garak
-python scripts/run_cloud_attack.py -t gpt-4o-mini -T garak --probes dan encoding
+python scripts/run_cloud_attack.py -t gpt-5-nano -T garak --probes dan encoding
 ```
 
 ## Intel NPU (Core Ultra)
@@ -107,11 +118,13 @@ local-ai-agents/
 - [CLAUDE.md](CLAUDE.md) - Instructions détaillées
 - [ROADMAP.md](ROADMAP.md) - Vision R&D
 - [docs/RESEARCH_2026.md](docs/RESEARCH_2026.md) - État de l'art
+- [docs/METACOGNITION.md](docs/METACOGNITION.md) - Framework de recherche
 
-## Ressources
+## Ressources (Verified January 2026)
 
-- [OpenAI GPT-5.2 Docs](https://platform.openai.com/docs/models/gpt-5.2)
+- [OpenAI Models](https://platform.openai.com/docs/models/)
 - [Gemini 3 Dev Guide](https://ai.google.dev/gemini-api/docs/gemini-3)
+- [Anthropic Claude](https://www.anthropic.com/claude)
 - [IPEX-LLM NPU](https://github.com/intel/ipex-llm)
 
 ## Éthique

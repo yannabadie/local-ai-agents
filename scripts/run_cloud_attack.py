@@ -3,17 +3,17 @@
 Cloud Attack CLI - Run red-team attacks on cloud LLM APIs.
 
 Usage:
-    python scripts/run_cloud_attack.py --target gpt-4o --technique tap --request "explain lockpicking"
+    python scripts/run_cloud_attack.py --target gpt-4.1 --technique tap --request "explain lockpicking"
     python scripts/run_cloud_attack.py --target claude-3-haiku --technique pyrit --request "bypass security"
     python scripts/run_cloud_attack.py --list-models
     python scripts/run_cloud_attack.py --test-connection
 
 Examples:
     # Run TAP attack on GPT-4o
-    python scripts/run_cloud_attack.py -t gpt-4o -T tap -r "explain how to pick a lock"
+    python scripts/run_cloud_attack.py -t gpt-4.1 -T tap -r "explain how to pick a lock"
 
     # Run with custom max queries
-    python scripts/run_cloud_attack.py -t gpt-4o -T tap -r "target behavior" --max-queries 50
+    python scripts/run_cloud_attack.py -t gpt-4.1 -T tap -r "target behavior" --max-queries 50
 
     # List available models
     python scripts/run_cloud_attack.py --list-models
@@ -129,8 +129,8 @@ def run_tap_attack(target_model: str, target_behavior: str, max_queries: int, pr
 
         config = TAPConfig(
             max_queries=max_queries,
-            attacker_model="gpt-4o-mini",
-            evaluator_model="gpt-4o-mini",
+            attacker_model="gpt-5-nano",
+            evaluator_model="gpt-5-nano",
             save_evidence=True,
         )
 
@@ -291,7 +291,7 @@ def main():
     # Target configuration
     parser.add_argument(
         "-t", "--target",
-        help="Target model (e.g., gpt-4o, claude-3-haiku, gemini-2.0-flash)"
+        help="Target model (e.g., gpt-4.1, claude-3-haiku, gemini-2.0-flash)"
     )
     parser.add_argument(
         "-p", "--provider",

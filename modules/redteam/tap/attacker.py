@@ -61,7 +61,7 @@ class TAPAttacker:
     and refine adversarial prompts based on previous attempts.
     """
 
-    def __init__(self, cloud_client, model: str = "gpt-4o-mini"):
+    def __init__(self, cloud_client, model: str = "gpt-5-nano"):
         """
         Initialize the attacker.
 

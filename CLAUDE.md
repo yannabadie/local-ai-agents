@@ -219,22 +219,25 @@ Attaques sur modèles cloud (OpenAI, Google, Anthropic):
 # Tester les connexions API
 python scripts/run_cloud_attack.py --test-connection
 
-# Attaque TAP sur GPT-4o-mini (le moins cher)
-python scripts/run_cloud_attack.py -t gpt-4o-mini -T tap -r "target behavior"
+# Attaque TAP sur gpt-5-nano (le plus rapide et abordable)
+python scripts/run_cloud_attack.py -t gpt-5-nano -T tap -r "target behavior"
 
 # Lister les modèles disponibles
 python scripts/run_cloud_attack.py --list-models
 ```
 
-### Modèles Cloud Disponibles (Janvier 2026)
+### Modèles Cloud Disponibles (Janvier 2026 - VERIFIED)
 
 | Provider | Modèle | Prix Input/Output | Notes |
 |----------|--------|-------------------|-------|
-| OpenAI | gpt-5.2 | $1.75/$14 | Flagship |
-| OpenAI | gpt-4o-mini | $0.15/$0.60 | **Recommandé tests** |
+| OpenAI | gpt-5.2 | $1.75/$14 | Flagship - 93.2% GPQA, 100% AIME |
+| OpenAI | gpt-5-nano | $0.10/$0.40 | **FASTEST, most affordable** |
+| OpenAI | gpt-5-mini | $0.30/$1.20 | Powerful reasoning |
 | Google | gemini-3-flash-preview | $0.075/$0.30 | **FREE TIER** |
+| Anthropic | claude-haiku-4-5 | $0.25/$1.25 | Fastest Claude |
 
-> Voir `docs/RESEARCH_2026.md` pour détails complets.
+> Sources: platform.openai.com/docs/models/, ai.google.dev, anthropic.com
+> Voir `docs/RESEARCH_2026.md` et `docs/METACOGNITION.md` pour détails complets.
 
 ### NPU Intel (IPEX-LLM)
 

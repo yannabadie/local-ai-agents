@@ -70,7 +70,7 @@ class TAPEvaluator:
     contains the target behavior (jailbreak success).
     """
 
-    def __init__(self, cloud_client, model: str = "gpt-4o-mini"):
+    def __init__(self, cloud_client, model: str = "gpt-5-nano"):
         """
         Initialize the evaluator.
 

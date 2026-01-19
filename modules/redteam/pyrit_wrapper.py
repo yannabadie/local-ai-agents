@@ -35,7 +35,7 @@ class PyRITConfig:
     """Configuration for PyRIT operations."""
     # Target configuration
     target_provider: str = "openai"
-    target_model: str = "gpt-4o-mini"
+    target_model: str = "gpt-5-nano"
 
     # Attack configuration
     max_prompts: int = 50

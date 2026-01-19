@@ -1,5 +1,5 @@
 # Cloud API Configuration for Red-Team Module
-# Updated: 2026-01-19
+# Updated: 2026-01-19 (VERIFIED via web search)
 #
 # SECURITY: API keys should be stored in environment variables, not this file.
 # Use ${ENV_VAR_NAME} syntax to reference environment variables.
@@ -12,47 +12,52 @@
 #    export GOOGLE_API_KEY=AIza...
 
 # OpenAI Configuration (January 2026)
-# GPT-5.2 released December 2025 - first model above 90% ARC-AGI
+# Source: platform.openai.com/docs/models/
+# GPT-5.2 released December 2025 - 93.2% GPQA Diamond, 100% AIME
 openai:
   api_key: ${OPENAI_API_KEY}
   models:
-    # GPT-5.2 series (flagship)
-    - gpt-5.2
-    - gpt-5.2-thinking
-    - gpt-5.2-pro
-    - gpt-5.2-codex
-    # GPT-4.5 (research preview)
-    - gpt-4.5
-    # GPT-4o series (cost-effective)
-    - gpt-4o
-    - gpt-4o-mini
-    # o-series reasoning
-    - o3-mini
-  default_model: gpt-4o-mini
+    # GPT-5.2 series (flagship - December 2025)
+    - gpt-5.2              # Flagship - $1.75/$14 per 1M tokens
+    - gpt-5.2-pro          # xhigh reasoning effort
+    - gpt-5.2-codex        # Agentic coding, SWE-Bench Pro leader
+    # GPT-5 mini/nano (BEST VALUE)
+    - gpt-5-mini           # Powerful reasoning, lower cost
+    - gpt-5-nano           # FASTEST, most affordable
+    # GPT-4.1 series (1M context, fine-tuning available)
+    - gpt-4.1              # Long context window
+    - gpt-4.1-mini         # Cost-effective
+    # Reasoning models
+    - o3-mini              # Small reasoning model
+    - o1-pro               # Maximum reasoning compute
+  default_model: gpt-5-nano  # Fastest, most affordable
   rate_limit:
     requests_per_minute: 60
     tokens_per_minute: 90000
 
-# Anthropic Configuration
+# Anthropic Configuration (January 2026)
+# Source: anthropic.com - Claude 4.5 series (November 2025)
+# NOTE: Claude Opus 4 and 4.1 have been REMOVED from API
 anthropic:
   api_key: ${ANTHROPIC_API_KEY}
   models:
-    - claude-3-opus-20240229
-    - claude-3-sonnet-20240229
-    - claude-3-haiku-20240307
-  default_model: claude-3-haiku-20240307
+    - claude-opus-4-5-20251101  # Flagship - $5/$25 per 1M tokens
+    - claude-sonnet-4-5         # Balanced performance
+    - claude-haiku-4-5          # Fastest, most cost-efficient
+  default_model: claude-haiku-4-5
   rate_limit:
     requests_per_minute: 60
     tokens_per_minute: 100000
 
 # Google Generative AI Configuration (January 2026)
+# Source: ai.google.dev/gemini-api/docs/models
 # Gemini 3 announced January 12, 2026 - 90.4% GPQA Diamond
 google:
   api_key: ${GOOGLE_API_KEY}
   models:
-    # Gemini 3 series (latest)
-    - gemini-3-pro-preview      # Reasoning-first, 1M context
-    - gemini-3-flash-preview    # Fast frontier-class, FREE TIER
+    # Gemini 3 series (January 2026 - ALL IN PREVIEW)
+    - gemini-3-pro-preview      # Reasoning-first, 1M context, $2/$12 per 1M
+    - gemini-3-flash-preview    # Fast frontier-class, FREE TIER available
   default_model: gemini-3-flash-preview
   rate_limit:
     requests_per_minute: 60
@@ -92,12 +97,12 @@ attacks:
     max_queries: 30
     branching_factor: 4
     pruning_threshold: 0.3
-    attacker_model: gpt-4o-mini
-    evaluator_model: gpt-4o-mini
+    attacker_model: gpt-5-nano    # Fastest for iterations
+    evaluator_model: gpt-5-nano   # Fastest for evaluations
 
   pair:
     max_iterations: 20
-    attacker_model: gpt-4o-mini
+    attacker_model: gpt-5-nano
 
 # Evidence collection
 evidence:

@@ -2,9 +2,16 @@
 Unified client for cloud LLM APIs.
 
 Provides a single interface for interacting with:
-- OpenAI (GPT-4, GPT-4-turbo, GPT-4o)
-- Anthropic (Claude 3 Opus, Sonnet, Haiku)
-- Google (Gemini Pro, Ultra)
+- OpenAI (GPT-5.2, GPT-5-mini/nano, GPT-4.1 series) - January 2026
+- Anthropic (Claude Opus/Sonnet/Haiku 4.5) - November 2025
+- Google (Gemini 3 Pro/Flash) - January 2026
+
+VERIFIED via web search January 19, 2026:
+- OpenAI: gpt-5.2 flagship, gpt-5-mini/nano for cost, gpt-4.1 for fine-tuning
+- Anthropic: Claude 4.5 series (Opus 4/4.1 REMOVED)
+- Google: Gemini 3 series in preview
+
+See docs/METACOGNITION.md for research methodology.
 """
 
 import os
@@ -107,26 +114,29 @@ class CloudConfig:
         )
 
 
-# Pricing per 1M tokens (January 2026 - verified)
+# Pricing per 1M tokens (January 2026 - VERIFIED via web search)
+# Sources: platform.openai.com, anthropic.com, ai.google.dev
 PRICING = {
-    # OpenAI models (January 2026)
-    # GPT-5.2 series (released December 2025) - flagship models
-    "gpt-5.2": {"input": 1.75, "output": 14.0},  # Official pricing
+    # OpenAI GPT-5.2 series (December 2025) - FLAGSHIP
+    "gpt-5.2": {"input": 1.75, "output": 14.0},
     "gpt-5.2-pro": {"input": 10.0, "output": 40.0},
     "gpt-5.2-codex": {"input": 1.75, "output": 14.0},
-    # GPT-4o series (still available, cost-effective)
-    "gpt-4o": {"input": 2.50, "output": 10.0},
-    "gpt-4o-mini": {"input": 0.15, "output": 0.60},
-    # o-series reasoning models
+    # OpenAI GPT-5 mini/nano (BEST VALUE)
+    "gpt-5-mini": {"input": 0.30, "output": 1.20},  # Powerful reasoning, lower cost
+    "gpt-5-nano": {"input": 0.10, "output": 0.40},  # FASTEST, most affordable
+    # OpenAI GPT-4.1 series (1M context, fine-tuning available)
+    "gpt-4.1": {"input": 2.0, "output": 8.0},
+    "gpt-4.1-mini": {"input": 0.10, "output": 0.40},
+    # OpenAI o-series (reasoning)
     "o3-mini": {"input": 1.10, "output": 4.40},
-    # Claude models
-    "claude-3-opus": {"input": 15.0, "output": 75.0},
-    "claude-3-sonnet": {"input": 3.0, "output": 15.0},
-    "claude-3-haiku": {"input": 0.25, "output": 1.25},
-    "claude-3.5-sonnet": {"input": 3.0, "output": 15.0},
-    # Google Gemini models (January 2026) - Gemini 3 series only
-    "gemini-3-pro-preview": {"input": 1.25, "output": 5.0},
-    "gemini-3-flash-preview": {"input": 0.075, "output": 0.30},  # Free tier available
+    "o1-pro": {"input": 15.0, "output": 60.0},  # Max reasoning
+    # Anthropic Claude 4.5 (November 2025 - LATEST)
+    "claude-opus-4-5-20251101": {"input": 5.0, "output": 25.0},
+    "claude-sonnet-4-5": {"input": 3.0, "output": 15.0},
+    "claude-haiku-4-5": {"input": 0.25, "output": 1.25},  # Fastest Claude
+    # Google Gemini 3 (January 2026 - LATEST)
+    "gemini-3-pro-preview": {"input": 2.0, "output": 12.0},  # Up to 200K context
+    "gemini-3-flash-preview": {"input": 0.075, "output": 0.30},  # FREE TIER
 }
 
 
@@ -163,20 +173,27 @@ class OpenAIProvider(BaseCloudProvider):
         if not OPENAI_AVAILABLE:
             raise ImportError("openai package not installed. Run: pip install openai")
         self.client = openai.OpenAI(api_key=api_key)
-        # Updated January 2026: GPT-5.2 series (verified available via API)
+        # January 2026 - VERIFIED via web search on platform.openai.com/docs/models/
         self.available_models = [
-            "gpt-5.2",           # Flagship - $1.75/$14 per 1M tokens
-            "gpt-5.2-pro",       # Maximum capability with xhigh reasoning
-            "gpt-5.2-codex",     # Agentic coding optimized
-            "gpt-4o",            # Fast & capable
-            "gpt-4o-mini",       # Most cost-effective
+            # GPT-5.2 series (December 2025) - FLAGSHIP
+            "gpt-5.2",           # Flagship - 93.2% GPQA Diamond, 100% AIME
+            "gpt-5.2-pro",       # xhigh reasoning effort
+            "gpt-5.2-codex",     # Agentic coding, SWE-Bench Pro leader
+            # GPT-5 mini/nano - BEST VALUE
+            "gpt-5-mini",        # Powerful reasoning at lower cost
+            "gpt-5-nano",        # FASTEST, most affordable reasoning
+            # GPT-4.1 series (1M context, fine-tuning available)
+            "gpt-4.1",           # 1M context window
+            "gpt-4.1-mini",      # Cost-effective for simpler tasks
+            # Reasoning models
             "o3-mini",           # Small reasoning model
+            "o1-pro",            # Maximum reasoning compute
         ]
 
     def generate(
         self,
         prompt: str,
-        model: str = "gpt-4o-mini",
+        model: str = "gpt-5-nano",
         max_tokens: int = 1024,
         temperature: float = 0.7,
         system_prompt: Optional[str] = None,
@@ -188,13 +205,25 @@ class OpenAIProvider(BaseCloudProvider):
         messages.append({"role": "user", "content": prompt})
 
         start_time = time.time()
-        response = self.client.chat.completions.create(
-            model=model,
-            messages=messages,
-            max_tokens=max_tokens,
-            temperature=temperature,
+
+        # January 2026 API changes for newer models:
+        # - GPT-5.x and o-series require max_completion_tokens instead of max_tokens
+        # - GPT-4.1 and GPT-5.x may not support custom temperature (only 1.0)
+        is_new_model = model.startswith("gpt-5") or model.startswith("gpt-4.1") or model.startswith("o")
+        token_param = "max_completion_tokens" if is_new_model else "max_tokens"
+
+        params = {
+            "model": model,
+            "messages": messages,
+            token_param: max_tokens,
             **kwargs
-        )
+        }
+
+        # Only add temperature for models that support it
+        if not is_new_model:
+            params["temperature"] = temperature
+
+        response = self.client.chat.completions.create(**params)
         latency = (time.time() - start_time) * 1000
 
         tokens_used = response.usage.total_tokens if response.usage else 0
@@ -238,12 +267,18 @@ class AnthropicProvider(BaseCloudProvider):
         if not ANTHROPIC_AVAILABLE:
             raise ImportError("anthropic package not installed. Run: pip install anthropic")
         self.client = anthropic.Anthropic(api_key=api_key)
-        self.available_models = ["claude-3-opus-20240229", "claude-3-sonnet-20240229", "claude-3-haiku-20240307"]
+        # January 2026 - VERIFIED via web search on anthropic.com
+        # Claude Opus 4 and 4.1 have been REMOVED - only 4.5 series available
+        self.available_models = [
+            "claude-opus-4-5-20251101",  # Flagship - $5/$25 per 1M tokens
+            "claude-sonnet-4-5",          # Balanced performance
+            "claude-haiku-4-5",           # Fastest, most cost-efficient
+        ]
 
     def generate(
         self,
         prompt: str,
-        model: str = "claude-3-haiku-20240307",
+        model: str = "claude-haiku-4-5",
         max_tokens: int = 1024,
         temperature: float = 0.7,
         system_prompt: Optional[str] = None,
@@ -283,14 +318,14 @@ class AnthropicProvider(BaseCloudProvider):
         )
 
     def _calculate_cost(self, model: str, usage) -> float:
-        # Map full model names to pricing keys
+        # Map full model names to pricing keys (Claude 4.5 series)
         model_key = None
-        if "opus" in model:
-            model_key = "claude-3-opus"
-        elif "sonnet" in model:
-            model_key = "claude-3-sonnet"
-        elif "haiku" in model:
-            model_key = "claude-3-haiku"
+        if "opus-4-5" in model:
+            model_key = "claude-opus-4-5-20251101"
+        elif "sonnet-4-5" in model:
+            model_key = "claude-sonnet-4-5"
+        elif "haiku-4-5" in model:
+            model_key = "claude-haiku-4-5"
 
         if model_key not in PRICING:
             return 0.0
@@ -302,9 +337,9 @@ class AnthropicProvider(BaseCloudProvider):
 
     def test_connection(self) -> bool:
         try:
-            # Simple test with minimal tokens
+            # Simple test with minimal tokens using Claude Haiku 4.5
             self.client.messages.create(
-                model="claude-3-haiku-20240307",
+                model="claude-haiku-4-5",
                 max_tokens=10,
                 messages=[{"role": "user", "content": "Hi"}]
             )
@@ -401,7 +436,7 @@ class CloudClient:
         response = client.generate(
             prompt="Hello, how are you?",
             provider=CloudProvider.OPENAI,
-            model="gpt-4o-mini"
+            model="gpt-4.1-mini"
         )
         print(response.content)
     """
@@ -541,11 +576,12 @@ class CloudClient:
         raise last_error
 
     def _get_default_model(self, provider: CloudProvider) -> str:
-        """Get the default (cheapest) model for a provider."""
+        """Get the default (cheapest/fastest) model for a provider."""
+        # January 2026 - Updated defaults to use best-value models
         defaults = {
-            CloudProvider.OPENAI: "gpt-4o-mini",
-            CloudProvider.ANTHROPIC: "claude-3-haiku-20240307",
-            CloudProvider.GOOGLE: "gemini-3-flash-preview",  # Gemini 3 series (Jan 2026)
+            CloudProvider.OPENAI: "gpt-5-nano",  # Fastest, most affordable
+            CloudProvider.ANTHROPIC: "claude-haiku-4-5",  # Fastest Claude
+            CloudProvider.GOOGLE: "gemini-3-flash-preview",  # FREE TIER
         }
         return defaults.get(provider, "")
 

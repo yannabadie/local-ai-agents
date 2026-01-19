@@ -34,7 +34,7 @@ class GarakConfig:
     """Configuration for Garak scans."""
     # Target configuration
     generator: str = "openai"  # openai, huggingface, ollama
-    model_name: str = "gpt-4o-mini"
+    model_name: str = "gpt-5-nano"
 
     # Probe selection
     probes: List[str] = field(default_factory=lambda: [
